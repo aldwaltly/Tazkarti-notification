@@ -3,30 +3,37 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-import time
-import telegram
+from telegram import Bot
 from telegram.ext import Application, CommandHandler, ContextTypes
+from selenium.webdriver.chrome.options import Options
 
 # Telegram Bot Token (Replace with your bot token)
-BOT_TOKEN = "7425768644:AAFXsJpW7rhF5ax9-QDVs0hFV_HLFWdhB9k"
+BOT_TOKEN = "7846774722:AAH4-vgro9OqzuzQ80lGw2aZEMTPP4uUcKk"
 CHAT_ID = "6483303120"
 
 async def send_telegram_message(message):
     try:
-        bot = telegram.Bot(token=BOT_TOKEN)
+        bot = Bot(token=BOT_TOKEN)
         await bot.send_message(chat_id=CHAT_ID, text=message)
         print(f"Message sent: {message}")  # Debug message
     except Exception as e:
         print(f"Error sending message: {e}")  # Debug error
 
 async def check_al_ahly_tickets(context: ContextTypes.DEFAULT_TYPE):
+    # Set up Chrome options to run in headless mode
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    
+    # Initialize Chrome WebDriver
     service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     
     try:
         while True:
             driver.get("https://www.tazkarti.com/#/matches")
-            time.sleep(5)  # Wait for the page to load
+            await asyncio.sleep(5)  # Wait for the page to load
             
             # Debug: Print current URL
             print(f"Current URL: {driver.current_url}")
@@ -37,14 +44,14 @@ async def check_al_ahly_tickets(context: ContextTypes.DEFAULT_TYPE):
             for match in matches:
                 print(f"Checking match: {match.text}")  # Debug: Print match details
                 
-                if "Al Ahly FC" in match.text:
+                if "Ghazl Elmahala FC" in match.text:
                     print("Match found! Sending message...")  # Debug: Match found
                     await send_telegram_message("🎟️ Al Ahly tickets are available! Check Tazkarti now: https://www.tazkarti.com/#/matches")
                     driver.quit()
                     return
             else:
                 print("No match found. Will check again later...")  # Debug: No match found
-                await asyncio.sleep(200)  # Wait for 5 minutes before checking again
+                await asyncio.sleep(6)  # Wait for 5 minutes before checking again
                 driver.refresh()
     
     finally:
