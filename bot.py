@@ -8,7 +8,7 @@ from telegram.ext import Application, CommandHandler, ContextTypes
 from selenium.webdriver.chrome.options import Options
 
 # Telegram Bot Token (Replace with your bot token)
-BOT_TOKEN = "7846774722:AAH4-vgro9OqzuzQ80lGw2aZEMTPP4uUcKk"
+BOT_TOKEN = "7716278980:AAEnMF3Lg1vSA6H9kiOLZAp7iAjx3CiQd6A"
 CHAT_ID = "6483303120"
 
 async def send_telegram_message(message):
