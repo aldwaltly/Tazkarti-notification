@@ -1,4 +1,5 @@
 import asyncio
+import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -52,8 +53,8 @@ async def check_al_ahly_tickets(context: ContextTypes.DEFAULT_TYPE):
             else:
                 print("No match found. Will check again later...")  # Debug: No match found
                 await asyncio.sleep(6)  # Wait for 5 minutes before checking again
-                driver.refresh()
-    
+                driver.quit()
+                
     finally:
         driver.quit()
 
